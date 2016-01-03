@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="bookworld.orm.Book" table="book" lazy="false">
+		<id name="id" column="id" type="java.lang.Integer">
+			<generator class="native"/>
+		</id>
+		<property name="isbn" column="isbn" type="java.lang.String"/>
+		<property name="bookName" column="bookName" type="java.lang.String"/>
+		<property name="writer" column="writer" type="java.lang.String"/>
+		<property name="date" column="date" type="java.lang.String"/>
+		<property name="publisher" column="publisher" type="java.lang.String"/>
+		<property name="picture" column="picture" type="java.lang.String"/>
+		<property name="price" column="price" type="java.lang.Double"/>
+		<property name="catagory" column="catagory" type="java.lang.String"/>
+		<property name="remaining" column="remaining" type="java.lang.Integer"/>
+		<property name="intro" column="intro" type="java.lang.String"/>
+		<!--property name="date" column="date" type="java.sql.Date"/-->
+	</class>
+</hibernate-mapping>

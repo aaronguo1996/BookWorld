@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd"-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+ http://www.springframework.org/schema/aop 
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd 
+ http://www.springframework.org/schema/data/mongo
+ http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+ 
+	<!-- Database Configuration -->
+	<mongo:mongo host="localhost" port="27017"/>
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">   
+	    <constructor-arg ref="mongo"/>   
+	    <constructor-arg name="databaseName" value="db"/>  
+	 </bean>   
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/bookstore</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>gz.19960828</value>
+		</property>
+	</bean>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>bookworld/orm/Admin.hbm.xml</value>
+				<value>bookworld/orm/Book.hbm.xml</value>
+				<value>bookworld/orm/Order.hbm.xml</value>
+				<value>bookworld/orm/OrderItem.hbm.xml</value>
+				<value>bookworld/orm/User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Dao Configuration -->
+	<bean id="logUserDao" class="bookworld.dao.LogUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+		<property name="mongoTemplate">
+			<ref local="mongoTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="adminLogDao" class="bookworld.dao.AdminLogDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="addBookDao" class="bookworld.dao.AddBookDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="createOrderItemDao" class="bookworld.dao.CreateOrderItemDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="manageUserDao" class="bookworld.dao.ManageUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+		<property name="mongoTemplate">
+			<ref local="mongoTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="purchaseDao" class="bookworld.dao.PurchaseDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="readBookDao" class="bookworld.dao.ReadBookDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="regUserDao" class="bookworld.dao.RegUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+		<property name="mongoTemplate">
+			<ref local="mongoTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="getUserDao" class="bookworld.dao.GetUserDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+		<property name="mongoTemplate">
+			<ref local="mongoTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="manageBookDao" class="bookworld.dao.ManageBookDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<bean id="statDao" class="bookworld.dao.StatisticDao">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	
+	<!-- Action Configuration -->
+	
+	<bean id="IndexAction" class="bookworld.action.IndexAction">
+		<property name="readNewBooks">
+			<ref bean="readBookDao"/> 
+		</property>
+	</bean>
+	
+	<bean id="DisplayAction" class="bookworld.action.DisplayAction">
+		<property name="getOneBook">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="RegAction" class="bookworld.action.RegAction" scope="prototype">
+		<property name="regDao">
+			<ref bean="regUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="LogInAction" class="bookworld.action.LogAction">
+		<property name="userDao">
+			<ref bean="logUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="LogOutAction" class="bookworld.action.LogOutAction">
+	</bean>
+	
+	<bean name="ShoppingCarAction" class="bookworld.action.ShoppingCarAction">
+		<property name="bookDao">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="AddToCarAction" class="bookworld.action.AddToCarAction">
+	</bean>
+	
+	<bean name="CreateOrderAction" class="bookworld.action.CreateOrderAction">
+		<property name="orderDao">
+			<ref bean="createOrderItemDao"/>
+		</property>
+		<property name="purchaseDao">
+			<ref bean="purchaseDao"/>
+		</property>
+	</bean>
+	
+	<bean name="DeleteOrderAction" class="bookworld.action.DeleteOrderAction">
+		<property name="orderDao">
+			<ref bean="createOrderItemDao"/>
+		</property>
+		<property name="purchaseDao">
+			<ref bean="purchaseDao"/>
+		</property>
+	</bean>
+	
+	<bean name="DisplayOrderAction" class="bookworld.action.DisplayOrderAction">
+		<property name="purchaseDao">
+			<ref bean="purchaseDao"/>
+		</property>
+		<property name="itemDao">
+			<ref bean="createOrderItemDao"/>
+		</property>
+		<property name="readDao">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="SearchAction" class="bookworld.action.SearchAction">
+		<property name="readBook">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="DisplayProfileAction" class="bookworld.action.DisplayProfileAction">
+		<property name="manageUser">
+			<ref bean="manageUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="EditProfileAction" class="bookworld.action.EditProfileAction">
+		<property name="manageUser">
+			<ref bean="manageUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="AdminIndexAction" class="bookworld.action.AdminIndexAction">
+		<property name="readBooks">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="AdminInAction" class="bookworld.action.AdminInAction">
+		<property name="adminDao">
+			<ref bean="adminLogDao"/>
+		</property>
+	</bean>
+	
+	<bean name="AddBookAction" class="bookworld.action.AddBookAction">
+		<property name="addBook">
+			<ref bean="addBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="AddUserAction" class="bookworld.action.AddUserAction" scope="prototype">
+		<property name="regDao">
+			<ref bean="regUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="RetrieveBookAction" class="bookworld.action.RetrieveBookAction">
+		<property name="readBook">
+			<ref bean="readBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="GetUserAction" class="bookworld.action.GetUserAction">
+		<property name="getUser">
+			<ref bean="getUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="UpdateUserAction" class="bookworld.action.UpdateUserAction">
+		<property name="userDao">
+			<ref bean="manageUserDao"/>
+		</property>
+		<property name="regDao">
+			<ref bean="regUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="UpdateBookAction" class="bookworld.action.UpdateBookAction">
+		<property name="readBook">
+			<ref bean="readBookDao"/>
+		</property>
+		<property name="addBook">
+			<ref bean="addBookDao"/>
+		</property>
+		<property name="manageBook">
+			<ref bean="manageBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="DeleteBookAction" class="bookworld.action.DeleteBookAction">
+		<property name="readBook">
+			<ref bean="readBookDao"/>
+		</property>
+		<property name="manageBook">
+			<ref bean="manageBookDao"/>
+		</property>
+	</bean>
+	
+	<bean name="DeleteUserAction" class="bookworld.action.DeleteUserAction">
+		<property name="manageUser">
+			<ref bean="manageUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="StatUserAction" class="bookworld.action.StatUserAction">
+		<property name="statDao">
+			<ref bean="statDao"/>
+		</property>
+		<property name="getUser">
+			<ref bean="getUserDao"/>
+		</property>
+	</bean>
+	
+	<bean name="StatBookAction" class="bookworld.action.StatBookAction">
+		<property name="statDao">
+			<ref bean="statDao"/>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+   
+<struts>
+	<constant name="struts.devMode" value="true"/>
+	<constant name="struts.objectFactory" value="spring" />
+	
+	<package name="default" extends="struts-default">
+		<!-- 定义一个拦截器 -->
+		<interceptors>
+			<interceptor name="validateInterceptor" class="bookworld.action.ValidateInterceptor">
+			</interceptor>
+			<!-- 拦截器栈 -->
+			<interceptor-stack name="default">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="validateInterceptor" />
+			</interceptor-stack>
+		</interceptors>
+		
+		<action name="index" class="IndexAction" method="execute">
+			<result name="success">client/index.jsp</result>
+		</action>
+		<action name="display" class="DisplayAction" method="execute">
+			<result name="success">client/display.jsp</result>
+		</action>
+		<action name="register">
+			<result name="success">client/register.jsp</result>
+		</action>
+		<action name="regSuccess" class="RegAction" method="execute">
+			<result name="success">client/regSuccess.jsp</result>
+			<result name="exist">client/register.jsp</result>
+			<result name="input">client/register.jsp</result>
+		</action>
+		<action name="login" class="LogInAction" method="execute">
+			<result name="success" type="redirect">index.action</result>
+			<result name="input">client/register.jsp</result>
+		</action>
+		<action name="logout" class="LogOutAction" method="execute">
+			<result name="success" type="redirect">index.action</result>
+		</action>
+		<action name="smallLogin">
+			<result name="success">client/login.jsp</result>
+		</action>
+		<action name="shoppingCar" class="ShoppingCarAction" method="execute">
+			<result name="success">client/shoppingCar.jsp</result>
+		</action>
+		<action name="addOne" class="ShoppingCarAction" method="addOne">
+			<result name="success">client/shoppingCar.jsp</result>
+		</action>
+		<action name="deleteOne" class="ShoppingCarAction" method="deleteOne">
+			<result name="success">client/shoppingCar.jsp</result>
+		</action>
+		<action name="addToCar" class="AddToCarAction" method="execute">
+			<result name="success" type="redirect">index.action</result>
+		</action>
+		<action name="makeOrder" class="CreateOrderAction" method="execute">
+			<result name="success">client/orderSuccess.jsp</result>
+		</action>
+		<action name="displayOrder" class="DisplayOrderAction" method="execute">
+			<result name="success">client/orderDisplay.jsp</result>
+			<result name="error">client/login.jsp</result>
+		</action>
+		<action name="deleteOrder" class="DeleteOrderAction" method="execute">
+			<result name="success" type="redirect">displayOrder.action</result>
+		</action>
+		<action name="clearCar" class="ShoppingCarAction" method="clear">
+			<result name="success" type="redirect">shoppingCar.action</result>
+		</action>
+		<action name="search" class="SearchAction" method="execute">
+			<result name="success">client/search.jsp</result>
+		</action>
+		<action name="displayProfile" class="DisplayProfileAction" method="execute">
+			<result name="success">client/profile.jsp</result>
+		</action>
+		<action name="edit" class="EditProfileAction" method="prepare">
+			<result name="success">client/editProfile.jsp</result>
+		</action>
+		<action name="editProfile" class="EditProfileAction" method="execute">
+			<result name="success" type="redirect">displayProfile.action</result>
+			<result name="input">client/editProfile.jsp</result>
+		</action>
+		<action name="adminLogin" class="AdminInAction" method="execute">
+			<result name="success" type="redirect">adminIndex.action?page=${page}</result>
+			<result name="input">client/login.jsp</result>
+		</action>
+		<action name="adminIndex" class="AdminIndexAction" method="execute">
+			<result name="success">admin/adminIndex.jsp</result>
+		</action>
+		<action name="addBook">
+			<result name="success">admin/addBook.jsp</result>
+		</action>
+		<action name="addBookResult" class="AddBookAction" method="execute">
+			<result name="success">admin/adminIndex.jsp</result>
+			<result name="input">admin/addBook.jsp</result>
+		</action>
+		<action name="addUser">
+			<result name="success">admin/addUser.jsp</result>
+		</action>
+		<action name="addUserResult" class="AddUserAction" method="execute">
+			<result name="success">admin/adminIndex.jsp</result>
+			<result name="input">admin/addUser.jsp</result>
+		</action>
+		<action name="getBook" class="RetrieveBookAction" method="prepare">
+			<result name="success">admin/retrieveBook.jsp?page=${page}</result>
+		</action>
+		<action name="getBookResult" class="RetrieveBookAction" method="execute">
+			<result name="success">admin/retrieveBook.jsp?page=${page}</result>
+			<result name="error">admin/retrieveBook.jsp</result>
+		</action>
+		<action name="getUser" class="GetUserAction" method="prepare">
+			<result name="success">admin/getUser.jsp?page=${page}</result>
+		</action>
+		<action name="getUserResult" class="GetUserAction" method="execute">
+			<result name="success">admin/getUser.jsp?page=${page}</result>
+			<result name="error">admin/getUser.jsp</result>
+		</action>
+		<action name="updateUser" class="UpdateUserAction" method="prepare">
+			<result name="success">admin/updateUser.jsp?userid=${userid}</result>
+			<result name="input">admin/updateUser.jsp?userid=${userid}</result>
+		</action>
+		<action name="updateUserResult" class="UpdateUserAction" method="execute">
+			<result name="success" type="redirect">getUserResult.action</result>
+			<result name="input">admin/updateUser.jsp?userid={userid}</result>
+		</action>
+		<action name="updateBook" class="UpdateBookAction" method="prepare">
+			<result name="success">admin/updateBook.jsp?bookid=${bookid}</result>
+			<result name="input">admin/updateBook.jsp?bookid=${bookid}</result>
+		</action>
+		<action name="updateBookResult" class="UpdateBookAction" method="execute">
+			<result name="success" type="redirect">getBookResult.action</result>
+			<result name="input">admin/updateBook.jsp?bookid={bookid}</result>
+		</action>
+		<action name="deleteBook" class="DeleteBookAction" method="execute">
+			<result name="success" type="redirect">getBookResult.action</result>
+		</action>
+		<action name="deleteUser" class="DeleteUserAction" method="execute">
+			<result name="success" type="redirect">getUserResult.action</result>
+		</action>
+		<action name="statUser">
+			<result name="success">admin/statUser.jsp</result>
+		</action>
+		<action name="statUserResult" class="StatUserAction" method="execute">
+			<result name="success">admin/statUser.jsp</result>
+			<result name="error">admin/statUser.jsp</result>
+			<result name="input">admin/statUser.jsp</result>
+		</action>
+		<action name="statBook">
+			<result name="success">admin/statBook.jsp</result>
+		</action>
+		<action name="statBookResult" class="StatBookAction" method="execute">
+			<result name="success">admin/statBook.jsp</result>
+			<result name="error">admin/statBook.jsp</result>
+			<result name="input">admin/statBook.jsp</result>
+		</action>
+	</package>
+	
+</struts>

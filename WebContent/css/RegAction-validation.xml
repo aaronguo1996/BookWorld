@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC
+        "-//Apache Struts//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+    <field name="user.account_no">
+        <!-- type值为校验器名，requiredstring：非空字符串校验器 -->
+        <field-validator type="requiredstring">
+            <message>nickname is required</message>
+        </field-validator>
+    </field>
+    
+    <field name="user.password">
+        <field-validator type="requiredstring">
+            <message>password is required</message>
+        </field-validator>
+        <!-- stringlength：字符串长度校验 -->
+        <field-validator type="stringlength">
+            <param name="minLength">6</param>
+            <message>password length should be more than 6</message>
+        </field-validator>
+    </field>
+    
+    <!-- 校验两次密码是否一致，使用 fieldexpression 校验器。expression参数指定判断用的表达式-->
+    <field name="password">
+    	<field-validator type="stringlength">
+            <param name="minLength">6</param>
+            <message>password length should be more than 6</message>
+        </field-validator>
+        <field-validator type="fieldexpression">
+            <!-- 表达式要写在   <![CDATA[]]>   内 -->
+            <param name="expression"><![CDATA[password==user.password]]></param>
+            <message>two passwords are not the same</message>
+        </field-validator>
+    </field>
+    
+    <field name="email">
+        <field-validator type="email">
+            <message>Wrong email</message>
+        </field-validator>
+        <field-validator type="fieldexpression">
+        	<param name="expression"><![CDATA[email==user.email]]></param>
+        	<message>two emails are not the same</message>
+        </field-validator>
+    </field>
+    
+</validators>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- 通过name属性定义了与映射文件关联的Bean文件为bookworld.orm.User,通过table属性定义了与映射文件关联
+	     的在数据库中的表为user，“lazy=false”是User的持久化对象要进行延迟加载 -->
+	<class name="bookworld.orm.User" table="user" lazy="false">
+		<id name="id" column="id" type="java.lang.Integer">
+			<generator class="native"/>
+		</id>
+		
+		<property name="account_no" column="account_no" type="java.lang.String" not-null="true"/>
+		<property name="userName" column="userName" type="java.lang.String"/>
+		<property name="password" column="password" type="java.lang.String" not-null="true"/>
+		<property name="email" column="email" type="java.lang.String"/>
+		<property name="address" column="address" type="java.lang.String"/>
+		<property name="postcode" column="postcode" type="java.lang.String"/>
+		<property name="level" column="level" type="java.lang.Double"/>
+	</class>
+</hibernate-mapping>
